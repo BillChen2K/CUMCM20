@@ -1,23 +1,23 @@
-function [result] = TPDESolve(lambdaguess, hguess, velocity) 
+function [result] = TPDESolve(lambdaguess, hguess, thetaguess, velocity) 
 %% 使用 pdepe 求解元件温度的微分方程
 
 % 参数配置
 Tenv = 25; % 环境温度
 V = velocity; % 传送速度
-alpha = 3; % 物体长度 cm
+alpha = 3.2; % 物体长度 cm
 
 % 物理参数
 rho = 7.874; % 密度
-C = 460; % 比热容
+C = 480; % 比热容
 lambda = lambdaguess; % 导热系数
-h = lambda / (alpha / 100); % 传热系数;
-h = hguess;
+% h = lambda / (alpha / 100);
+h = hguess;  % 对流换热系数;
 x = linspace(0, alpha, 30);
 t = linspace(0, 400, 800);
 m = 0;
 
 sol = pdepe(m, @TPDE, @TPDE_IC, @TPDE_BC, x, t);
-hold off;
+hold on;
 grid on;
 plot(t, sol(:,15), 'LineWidth', 1)
 title('PDE 数值解');
@@ -42,9 +42,13 @@ result = sol;
     
     % PDE 边界值
     function [pl, ql, pr, qr] =  TPDE_BC(xl, ul, xr, ur, t)
-        pl = h * Tfur(t) - h * ul;
+%         pl = h * Tfur(t) - h * ul;
+%         ql = lambda;
+%         pr = h * ur - h * Tfur(t - alpha / V);
+%         qr = lambda;
+        pl = h * Tfur2D(t, ul, thetaguess, V) - h * ul;
         ql = lambda;
-        pr = h * ur - h * Tfur(t - alpha / V);
+        pr = h * ur - h * Tfur2D(t - alpha / V, ur, thetaguess, V);
         qr = lambda;
     end
 end

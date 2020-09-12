@@ -1,33 +1,23 @@
 % 从最大速度开始筛选
-result = table;
-for vv = 75.5:-0.001:75.4
+result = [];
+for vv = 100:-1:65
     out = vv
     % 指定拟合的模型参数
-    lambda = 99.7964;
-    h = 1813.6;
-    theta = 21.2916;
+    lambda = 94.5259;
+    h = 1404.8;
+    theta = 37.8820;
     sol = TPDESolve(lambda, h, theta, vv);
     sol = sol(:,15);
     restrains = {@RestrainDiff @RestrainRising @RestrainPeakTime @RestrainPeakTemp};
-    flag = 0;
+    flag = 1;
 
-    if ~RestrainDiff(sol)
-        flag = 1;
+    if ~RestrainDiff(sol) || ~RestrainRising(sol) || ~RestrainPeakTime(sol) || ~RestrainPeakTemp(sol)
+        flag = 0;
     end
-    
-    if ~RestrainRising(sol) 
-        flag = 2;
+
+    if flag
+        result(vv) = 1;
     end
-    
-    if ~RestrainPeakTime(sol)
-        flag = 3;
-    end
-    
-    if ~RestrainPeakTemp(sol)
-        flag = 4;
-    end
-    
-    result = [result; {vv, flag}];
 end
 
 function res = RestrainDiff(sol)
@@ -53,7 +43,6 @@ end
 function res = RestrainRising(sol)
 %% 升温时间是否符合要求？
     % 只考虑升温过程
-    sol = sol(1:600);
     count = sol(sol > 150 & sol < 190);
     [t, ~] = size(count);
     if t / 2 > 60 && t / 2 < 120
