@@ -1,12 +1,13 @@
 
 %% 设定温度曲线绘制
 
-x = 0:0.1:400;
-y = 0:4000;
-for i = 1:4001
+x = 0.5:0.5:400;
+y = 1:800;
+for i = 1:800
     y(i) = Tfur(x(i));
 end
-figure; box on; grid on; hold on;
+% figure;
+box on; grid on; hold on;
 width = 800;
 height = 400;
 set(gcf,'position',[0,0,width,height])

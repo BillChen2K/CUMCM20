@@ -1,9 +1,9 @@
-function [result] = TPDESolve(lambdaguess, hguess) 
-%% 参数配置
-% 使用 pdepe 求解元件温度的微分方程
+function [result] = TPDESolve(lambdaguess, hguess, velocity) 
+%% 使用 pdepe 求解元件温度的微分方程
 
+% 参数配置
 Tenv = 25; % 环境温度
-V = 70; % 传送速度
+V = velocity; % 传送速度
 alpha = 3; % 物体长度 cm
 
 % 物理参数
@@ -17,7 +17,7 @@ t = linspace(0, 400, 800);
 m = 0;
 
 sol = pdepe(m, @TPDE, @TPDE_IC, @TPDE_BC, x, t);
-hold on;
+hold off;
 grid on;
 plot(t, sol(:,15), 'LineWidth', 1)
 title('PDE 数值解');
