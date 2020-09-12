@@ -2,7 +2,7 @@ function [tfur]  = Tfur(t)
     furnaceLength = 30.5; % 熔炉长度
     furnaceGap = 5;  % 熔炉间隙
     edgeGap = 25; % 炉前与炉后
-    V = 70; % 速度， cm/min
+    V = 78; % 速度， cm/min
     
     tempEnv = 25; % 环境温度
     

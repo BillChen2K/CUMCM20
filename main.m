@@ -16,7 +16,7 @@ green = '#55AF7B';
 blue = '#4286F3';
 
 plot(x, y, 'Color',red, 'LineWidth', 1)
-title('炉温设定温度')
+title('拟合结果')
 xlabel('t (s)')
 ylabel('T_{fur} (^{\circ}C)')
 

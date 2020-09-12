@@ -17,7 +17,7 @@ t = linspace(0, 400, 800);
 m = 0;
 
 sol = pdepe(m, @TPDE, @TPDE_IC, @TPDE_BC, x, t);
-hold on;
+hold off;
 grid on;
 plot(t, sol(:,15), 'LineWidth', 1)
 title('PDE 数值解');
