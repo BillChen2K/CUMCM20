@@ -1,11 +1,9 @@
-clear;
-clf; close all;
 
 %% 设定温度曲线绘制
 
-x = 0:0.1:350;
-y = 0:3500;
-for i = 1:3501
+x = 0:0.1:400;
+y = 0:4000;
+for i = 1:4001
     y(i) = Tfur(x(i));
 end
 figure; box on; grid on; hold on;

@@ -17,19 +17,23 @@ function [tfur]  =Tfur(t)
     tempZone5 = 25;
     furnaceTemp = [repmat(tempZone1, 1, 5) tempZone2 tempZone3 ...
         repmat(tempZone4,1,2) repmat(tempZone5, 1,2)];
-
     distance = V / 60 * t - edgeGap;
+    if distance < 0
+        tfur = tempEnv;
+        return
+    end
     fCount = ceil(distance / (furnaceLength + furnaceGap));
     fCount(fCount < 1) = 1;
     dd = distance - (furnaceLength + furnaceGap) * (fCount - 1);
-    if dd <= furnaceLength
-        tfur = furnaceTemp(fCount);
-    else
-        if(fCount < 11)
-            tfur = (furnaceTemp(fCount) + furnaceTemp(fCount + 1)) / 2;
+    if(fCount < 11)
+        if dd <= furnaceLength
+            tfur = furnaceTemp(fCount);
         else
-            tfur = tempEnv;
+            tfur = (furnaceTemp(fCount) + furnaceTemp(fCount + 1)) / 2;
+
         end
+    else
+        tfur = tempEnv;
     end
 end
 

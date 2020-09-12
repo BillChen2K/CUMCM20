@@ -1,0 +1,5 @@
+
+    dt = 0.1;
+    plot(dt, dt)
+    % options=optimset('TolX',tolX,'TolFun',tolFun,'MaxFunEvals',1200,'Display',Display);
+    options=optimset('TolX',1e-5,'TolFun',1e-5,'MaxFunEvals',1200,'Display','iter');
