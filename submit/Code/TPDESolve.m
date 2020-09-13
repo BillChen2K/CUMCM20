@@ -1,4 +1,4 @@
-function [result] = TPDESolve(lambdaguess, hguess, thetaguess, velocity, tempMat) 
+function [result] = TPDESolve(lambdaguess, hguess, thetaguess, velocity) 
 %% 使用 pdepe 求解元件温度的微分方程
 
 % 参数配置
@@ -17,7 +17,7 @@ t = linspace(0, 400, 800);
 m = 0;
 
 sol = pdepe(m, @TPDE, @TPDE_IC, @TPDE_BC, x, t);
-hold off;
+hold ;
 grid on;
 plot(t, sol(:,15), 'LineWidth', 1)
 title('PDE 数值解');
@@ -42,12 +42,13 @@ result = sol;
     
     % PDE 边界值
     function [pl, ql, pr, qr] =  TPDE_BC(xl, ul, xr, ur, t)
-
-%         pl = h * Tfur2D(t, ul, thetaguess, V) - h * ul;
-        pl = h * TfurFO(t, tempMat, ul, thetaguess, V) - h * ul;
+%         pl = h * Tfur(t) - h * ul;
+%         ql = lambda;
+%         pr = h * ur - h * Tfur(t - alpha / V);
+%         qr = lambda;
+        pl = h * Tfur2D(t, ul, thetaguess, V) - h * ul;
         ql = lambda;
-%         pr = h * ur - h * Tfur2D(t - alpha / V, ur, thetaguess, V);
-        pr = h * ur - h * TfurFO(t - alpha / V, tempMat, ul, thetaguess, V);
+        pr = h * ur - h * Tfur2D(t - alpha / V, ur, thetaguess, V);
         qr = lambda;
     end
 end

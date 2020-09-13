@@ -10,28 +10,44 @@ theta = 21.2916;
 % 优化参数
 
 
-V = 70;
-t1 = 175;
-t2 = 195;
-t3 = 240;
-t4 = 257;
-t5 = 25; % t5 恒定为 25
+% V = 70;
+% t1 = 175;
+% t2 = 195;
+% t3 = 240;
+% t4 = 257;
+% t5 = 25; % t5 恒定为 25
+
+% ROUND 1
+% dt = 3;
+% % 
+% Vb = [89 100];
+% t1b = [165 185];
+% t2b = [185 205];
+% t3b = [225 245];
+% t4b = [245 265];
+
+% % ROUND 2
 dt = 1;
 
-Vb = [65 100];
-t1b = [165 185];
-t2b = [185 205];
-t3b = [225 245];
-t4b = [245 265];
+Vb = [94 96];
+t1b = [180 186];
+t2b = [197 203];
+t3b = [237 243];
+t4b = [260 265];
 
 for V=Vb(1):dt:Vb(2)
     for t1=t1b(1):dt:t1b(2)
         for t2=t2b(1):dt:t2b(2)
-            for t3=Vb(1):dt:t3b(2)
+            for t3=t3b(1):dt:t3b(2)
                 for t4=t4b(1):dt:t4b(2)
-                    for t5=t5b(1):dt:t5b(2)
-                    
+                    [Aera, sol] = FF(lambda, h, theta, V, [t1 t2 t3 t4 t5]);
+                    [success, flag] = Restrain(sol(:,15));
+                    if success
+                        Output = [Output; [V, t1, t2, t3, t4, t5, Aera]];
+                    else
+                        OutputFail = [OutputFail; [V, t1, t2, t3, t4, t5, flag]];
                     end
+                    disp([V t1 t2 t3 t4 success flag round(Aera)]);
                 end
             end
         end
@@ -39,16 +55,6 @@ for V=Vb(1):dt:Vb(2)
 end
 
 
-global TfurCalced;
-TfurCalced = false;
-
-[Aera, sol] = FF(lambda, h, theta, V, [t1 t2 t3 t4 t5]);
-[success, flag] = Restrain(sol(:,15));
-if success
-    Output = [Output; [V, t1, t2, t3, t4, t5, Aera]];
-else
-    OutputFail = [OutputFail; [V, t1, t2, t3, t4, t5, flag]];
-end
 
 
 
@@ -64,8 +70,8 @@ function [aera, sol] = FF(lambda, h, theta, V, mat)
         peakTime = find(sol==peakTemp);
         sol = sol(1:peakTime);
         count = sol(sol > 217 & sol <= peakTemp);
-        [~,l] = size(count);
-        res = sum(count) * l / 2;
+        [l,~] = size(count);
+        res = sum(count) / 2 - (l / 2) * 217;
     end
 end
 
@@ -110,10 +116,10 @@ function [success, flag] = Restrain(sol)
             res = false;
 
         end
-        if dc ~= 0
-            res = false;
+        %if dc ~= 0
+           % res = false;
 
-        end
+        %end
         valueMax = max(tdiff);
         valueMin = min(tdiff);
         res = true;
@@ -160,5 +166,21 @@ function [success, flag] = Restrain(sol)
     end
 end
 
+%%  寻找最小值
 
+ % minRow = find(Output(:,7) == min(Output(:,7)));
+ % Output(minRow,:)
+ 
+ 
 
+%% 画图
+scatter3(Output(:,1), Output(:,2),Output(:,7));
+% view(40, 35);
+% set(gcf,'position',[0,0,1000,400]);
+box on;
+grid on;
+title("粗粒度遍历 (dv = 3)");
+xlabel('v');
+ylabel('T_{fur1}');
+zlabel('A');
+exportgraphics(gcf,'OROUND1.png','Resolution',300);
