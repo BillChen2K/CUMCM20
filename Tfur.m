@@ -12,8 +12,8 @@ function [tfur]  = Tfur(t)
      t3 = 235;
      t4 = 255;
      t5 = 25;
-%     
-%     
+
+     
 %     t1 = 173; % Q1 - 预测温区温度配置
 %     t2 = 198;
 %     t3 = 230;
@@ -43,6 +43,7 @@ function [tfur]  = Tfur(t)
     
 %     furnaceTemp = [repmat(tempZone1, 1, 5) tempZone2 tempZone3 ...
 %         repmat(tempZone4,1,2) repmat(tempZone5, 1,2)];
+
     distance = V / 60 * t - edgeGap;
     furnaceTemp = tempMat(ceil(t * 2), 2:12);
     if distance < 0
